@@ -15,7 +15,7 @@ public class EasyPronounsConfig implements ConfigData {
     }
 
     public int getMaxPronounSize() {
-        return maxPronouns;
+        return maxPronounSize;
     }
     
     public boolean displaysOnTabList(){
