@@ -1,0 +1,15 @@
+name: EasyPronouns
+version: '1.0'
+main: dev.piny.easyPronouns.EasyPronouns
+api-version: '1.21'
+prefix: EasyPronouns
+authors: [ Ember <piny.dev> ]
+description: Adds a server-side way to display people's pronouns!
+website: https://modrinth.com/plugin/easypronouns
+permissions:
+  easypronouns.manage:
+    description: Allows the player to manage the config and other people's pronouns.
+    default: op
+  easypronouns.set:
+    description: Allows the player to set their pronouns.
+    default: true

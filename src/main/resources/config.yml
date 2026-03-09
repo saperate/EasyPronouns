@@ -1,0 +1,9 @@
+maxPronounSize: 16
+display:
+  tab:
+    enabled: true
+    # The format for the tab list. <pronouns> will be replaced with the player's pronouns, and <player> will be replaced with their name.
+    format: '<grey>[<pronouns>]<white> <player>'
+  name:
+    enabled: true
+    format: '<grey> <pronouns>'
