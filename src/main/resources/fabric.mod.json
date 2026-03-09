@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "easypronouns",
+  "version": "${version}",
+
+  "name": "EasyPronouns",
+  "description": "",
+  "authors": ["Saperate"],
+  "contact": {},
+
+  "license": "All-Rights-Reserved",
+  "icon": "assets/easypronouns/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": ["dev.saperate.easypronouns.client.EasyPronounsDataGenerator"],
+    "client": ["dev.saperate.easypronouns.client.EasyPronounsClient"],
+    "main": ["dev.saperate.easypronouns.EasyPronouns"],
+    "server": ["dev.saperate.easypronouns.server.EasyPronounsServer"]
+  },
+
+  "mixins": [
+    "easypronouns.mixins.json"
+    ,{
+      "config": "easypronouns.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}",
+    "cloth-config": "21.*"
+  }
+}
