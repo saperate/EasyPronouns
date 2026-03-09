@@ -49,4 +49,54 @@ public class Events implements Listener {
             Data.setPronouns(player.getUniqueId(), pronouns);
         }
     }
+
+    @EventHandler
+    public void handleManageDialog(PlayerCustomClickEvent event) {
+        if (!event.getIdentifier().equals(Key.key("easypronouns:manage/confirm"))) {
+            return;
+        }
+
+        DialogResponseView view = event.getDialogResponseView();
+        if (view == null) {
+            return;
+        }
+
+        if (
+                view.getFloat("maxSize") == null ||
+                view.getFloat("maxSize").intValue() < 1 ||
+                view.getFloat("maxSize").intValue() > 64
+        ) {
+            if (event.getCommonConnection() instanceof PlayerGameConnection conn) {
+                Player player = conn.getPlayer();
+                player.sendRichMessage("<red>Max pronoun size must be between 1 and 64!");
+            }
+            return;
+        }
+
+        if (
+                view.getText("nameFormat") == null ||
+                view.getText("nameFormat").isEmpty()
+        ) {
+            if (event.getCommonConnection() instanceof PlayerGameConnection conn) {
+                Player player = conn.getPlayer();
+                player.sendRichMessage("<red>Name format cannot be empty!");
+            }
+            return;
+        }
+
+        assert view.getFloat("maxSize") != null;
+        int maxSize = view.getFloat("maxSize").intValue();
+        String belowNameFormat = view.getText("nameFormat");
+
+        EasyPronouns.getInstance().getConfig().set("maxPronounSize", maxSize);
+        EasyPronouns.getInstance().getConfig().set("display.name.format", belowNameFormat);
+        EasyPronouns.getInstance().saveConfig();
+
+        Bukkit.getServer().getOnlinePlayers().forEach(player -> EasyPronouns.getInstance().updatePlayerDisplay(player));
+
+        if (event.getCommonConnection() instanceof PlayerGameConnection conn) {
+            Player player = conn.getPlayer();
+            player.sendRichMessage("<green>Configuration updated!");
+        }
+    }
 }

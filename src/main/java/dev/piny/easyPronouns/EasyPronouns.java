@@ -16,19 +16,14 @@ import java.io.IOException;
 
 public final class EasyPronouns extends JavaPlugin {
 
+    private Objective objective;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
-        Objective objective = Bukkit.getScoreboardManager().getMainScoreboard().getObjective("pronouns");
-        if (objective == null) {
-            objective = Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective("pronouns", Criteria.DUMMY, Component.empty());
-            objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
-        }
-
         saveDefaultConfig();
-
-        new Events();
         new Command();
+        new Events();
 
         try {
             Data.load();
@@ -36,11 +31,25 @@ public final class EasyPronouns extends JavaPlugin {
             getLogger().severe("Failed to load data: " + e.getMessage());
             Bukkit.getServer().getPluginManager().disablePlugin(this);
         }
+
+        Bukkit.getScheduler().runTaskLater(this, () -> { // Make sure the world has FULLY loaded before we try to access the scoreboard.
+            objective = Bukkit.getScoreboardManager().getMainScoreboard().getObjective("pronouns");
+            if (objective == null) {
+                objective = Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective("pronouns", Criteria.DUMMY, Component.empty());
+                objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
+            }
+        }, 1L);
     }
 
-    Objective objective = Bukkit.getScoreboardManager().getMainScoreboard().getObjective("pronouns");
 
     public void updatePlayerDisplay(Player target) {
+        // Probably fine but just in case
+        objective = Bukkit.getScoreboardManager().getMainScoreboard().getObjective("pronouns");
+        if (objective == null) {
+            objective = Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective("pronouns", Criteria.DUMMY, Component.empty());
+            objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
+        }
+
         Score score = objective.getScore(target);
         score.setScore(0);
         score.numberFormat(NumberFormat.fixed(MiniMessage.miniMessage().deserialize(getConfig().getString("display.name.format", "<grey> <pronouns>"), Placeholder.component("pronouns", Component.text(Data.getPronouns(target.getUniqueId()))), Placeholder.component("player", Component.text(target.getName())))));

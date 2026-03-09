@@ -61,14 +61,18 @@ public class Command {
                                                                     Component.text("Max pronoun size"),
                                                                     1,
                                                                     64
-                                                            ).step(1f).initial(Float.parseFloat(String.valueOf(EasyPronouns.getInstance().getConfig().getInt("maxPronounSize", 16)))).build()
+                                                            ).step(1f).initial(Float.parseFloat(String.valueOf(EasyPronouns.getInstance().getConfig().getInt("maxPronounSize", 16)))).build(),
 //                                                            DialogInput.bool("tabToggle", Component.text("Tab Display?"))
 //                                                                    .initial(EasyPronouns.getInstance().getConfig().getBoolean("display.tab.enabled", false))
 //                                                                    .build(),
 //                                                            DialogInput.text("tabFormat", Component.text("Tab Display Format (<pronouns> / <player> are available.)"))
 //                                                                    .initial(EasyPronouns.getInstance().getConfig().getString("display.tab.format", "<grey><pronouns><white> <player>"))
 //                                                                    .maxLength(256) // Probably way bigger than actually allowed, but we need to consider formatting
-//                                                                    .build()
+//                                                                    .build(),
+                                                            DialogInput.text("nameFormat", Component.text("Below Name Format (<pronouns> is available.)"))
+                                                                    .initial(EasyPronouns.getInstance().getConfig().getString("display.name.format", "<grey> <pronouns>"))
+                                                                    .maxLength(256)
+                                                                    .build()
                                                     )).build()
                                             )
                                             .type(DialogType.confirmation(
