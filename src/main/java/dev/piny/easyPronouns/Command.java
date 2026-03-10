@@ -61,17 +61,27 @@ public class Command {
                                                                     Component.text("Max pronoun size"),
                                                                     1,
                                                                     64
-                                                            ).step(1f).initial(Float.parseFloat(String.valueOf(EasyPronouns.getInstance().getConfig().getInt("maxPronounSize", 16)))).build(),
-//                                                            DialogInput.bool("tabToggle", Component.text("Tab Display?"))
-//                                                                    .initial(EasyPronouns.getInstance().getConfig().getBoolean("display.tab.enabled", false))
-//                                                                    .build(),
-//                                                            DialogInput.text("tabFormat", Component.text("Tab Display Format (<pronouns> / <player> are available.)"))
-//                                                                    .initial(EasyPronouns.getInstance().getConfig().getString("display.tab.format", "<grey><pronouns><white> <player>"))
-//                                                                    .maxLength(256) // Probably way bigger than actually allowed, but we need to consider formatting
-//                                                                    .build(),
+                                                            ).step(1f).width(512).initial(Float.parseFloat(String.valueOf(EasyPronouns.getInstance().getConfig().getInt("maxPronounSize", 16)))).build(),
+                                                            DialogInput.bool("tabToggle", Component.text("Tab Display? (Requires ProtocolLib)"))
+                                                                    .initial(EasyPronouns.getInstance().getConfig().getBoolean("display.tab.enabled", false))
+                                                                    .build(),
+                                                            DialogInput.text("tabFormat", Component.text("Tab Display Format (<pronouns> / <player> are available.)"))
+                                                                    .initial(EasyPronouns.getInstance().getConfig().getString("display.tab.format", "<grey>[<pronouns>]<white> <player>"))
+                                                                    .maxLength(256)
+                                                                    .width(512)
+                                                                    .build(),
                                                             DialogInput.text("nameFormat", Component.text("Below Name Format (<pronouns> is available.)"))
                                                                     .initial(EasyPronouns.getInstance().getConfig().getString("display.name.format", "<grey> <pronouns>"))
                                                                     .maxLength(256)
+                                                                    .width(512)
+                                                                    .build(),
+                                                            DialogInput.bool("chatToggle", Component.text("Chat Display?"))
+                                                                    .initial(EasyPronouns.getInstance().getConfig().getBoolean("display.chat.enabled", false))
+                                                                    .build(),
+                                                            DialogInput.text("chatFormat", Component.text("Chat Display Format (<pronouns> / <player> are available.)"))
+                                                                    .initial(EasyPronouns.getInstance().getConfig().getString("display.chat.format", "<hover:show_text:'<pronouns>'><player></hover>"))
+                                                                    .maxLength(256)
+                                                                    .width(512)
                                                                     .build()
                                                     )).build()
                                             )
@@ -102,6 +112,7 @@ public class Command {
                                                     DialogInput.text("pronouns", Component.text("Enter your pronouns"))
                                                             .initial(Data.getPronouns(context.getSource().getExecutor().getUniqueId()))
                                                             .maxLength(EasyPronouns.getInstance().getConfig().getInt("maxPronounSize", 16))
+                                                            .width(512)
                                                             .build()
                                             )).build()
                                     )

@@ -2,12 +2,16 @@ maxPronounSize: 16
 
 # Whenever you are able to format a string you can use any MiniMessage you want (https://webui.advntr.dev/).
 display:
-#  This is currently non-functional, but will be used in the future.
-#  tab:
-#    enabled: true
-#    # The format for the tab list. <pronouns> will be replaced with the player's pronouns, and <player> will be replaced with their name.
-#    format: '<grey>[<pronouns>]<white> <player>'
+  tab:
+    enabled: false
+    # The format for the tab list. <pronouns> will be replaced with the player's pronouns, and <player> will be replaced with their name.
+    # Requires ProtocolLib to be installed.
+    format: '<grey>[<pronouns>]<white> <player>'
   name:
     enabled: true
     # The format for the player's name. <pronouns> will be replaced with the player's pronouns, and <player> will be replaced with their name.
     format: '<grey> <pronouns>'
+  chat:
+    enabled: true
+    # Replaces the name in chat messages (assumes chat messages follow the format <player>: <message>). <pronouns> will be replaced with the player's pronouns, and <player> will be replaced with their name.
+    format: "<hover:show_text:'<pronouns>'><player></hover>"

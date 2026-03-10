@@ -1,5 +1,7 @@
 package dev.piny.easyPronouns;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -12,11 +14,12 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 
 public final class EasyPronouns extends JavaPlugin {
-
     private Objective objective;
+    @Nullable public ProtocolManager protocolManager;
 
     @Override
     public void onEnable() {
@@ -24,6 +27,13 @@ public final class EasyPronouns extends JavaPlugin {
         saveDefaultConfig();
         new Command();
         new Events();
+
+        if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+            protocolManager = ProtocolLibrary.getProtocolManager();
+            new PacketListener();
+        } else {
+            getLogger().warning("ProtocolLib not found! Some features will be disabled or function differently. Please install ProtocolLib for the best experience.");
+        }
 
         try {
             Data.load();
@@ -41,7 +51,6 @@ public final class EasyPronouns extends JavaPlugin {
         }, 1L);
     }
 
-
     public void updatePlayerDisplay(Player target) {
         // Probably fine but just in case
         objective = Bukkit.getScoreboardManager().getMainScoreboard().getObjective("pronouns");
@@ -53,6 +62,8 @@ public final class EasyPronouns extends JavaPlugin {
         Score score = objective.getScore(target);
         score.setScore(0);
         score.numberFormat(NumberFormat.fixed(MiniMessage.miniMessage().deserialize(getConfig().getString("display.name.format", "<grey> <pronouns>"), Placeholder.component("pronouns", Component.text(Data.getPronouns(target.getUniqueId()))), Placeholder.component("player", Component.text(target.getName())))));
+
+        PacketListener.updateTabDisplay(target);
     }
 
     @Override
