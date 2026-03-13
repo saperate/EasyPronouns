@@ -1,5 +1,5 @@
 name: EasyPronouns
-version: '1.1'
+version: '1.2.0'
 main: dev.piny.easyPronouns.EasyPronouns
 api-version: '1.21'
 prefix: EasyPronouns
@@ -13,3 +13,6 @@ permissions:
   easypronouns.set:
     description: Allows the player to set their pronouns.
     default: true
+softdepend:
+  - ProtocolLib
+  - PlaceholderAPI

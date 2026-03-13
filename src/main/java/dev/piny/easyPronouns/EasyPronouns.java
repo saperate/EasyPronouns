@@ -35,6 +35,12 @@ public final class EasyPronouns extends JavaPlugin {
             getLogger().warning("ProtocolLib not found! Some features will be disabled or function differently. Please install ProtocolLib for the best experience.");
         }
 
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new PronounsExpansion().register();
+        } else {
+            getLogger().warning("PlaceholderAPI not found! Placeholder support will be disabled. Please install PlaceholderAPI for the best experience.");
+        }
+
         try {
             Data.load();
         } catch (IOException e) {
