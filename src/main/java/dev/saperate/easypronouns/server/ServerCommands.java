@@ -5,17 +5,16 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.saperate.easypronouns.EasyPronouns;
 import dev.saperate.easypronouns.data.Pronouns;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
 
 public class ServerCommands {
     public static void registerCommands() {
-        LiteralArgumentBuilder<ServerCommandSource> root = CommandManager.literal("pronoun");
+        LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal("pronoun");
 
         addPronounsCommand(root);
         removePronounsCommand(root);
@@ -24,18 +23,18 @@ public class ServerCommands {
                 dispatcher.register(root));
     }
 
-    public static void addPronounsCommand(LiteralArgumentBuilder<ServerCommandSource> root) {
-        root.then(CommandManager.literal("add").then(
-                        CommandManager.argument("pronoun", StringArgumentType.string())
+    public static void addPronounsCommand(LiteralArgumentBuilder<CommandSourceStack> root) {
+        root.then(Commands.literal("add").then(
+                        Commands.argument("pronoun", StringArgumentType.string())
                                 .executes(context -> {
-                                    ServerPlayerEntity player = context.getSource().getPlayer();
+                                    ServerPlayer player = context.getSource().getPlayer();
                                     if (player == null) {
                                         return 1;
                                     }
                                     
                                     if(Pronouns.getPlayerData(player).pronounCount() > EasyPronouns.getConfig().getMaxPronouns()){
-                                        context.getSource().sendFeedback(() ->
-                                                        Text.literal(
+                                        context.getSource().sendSuccess(() ->
+                                                        Component.literal(
                                                                 "Too many pronouns! Server allows for up to " 
                                                                         + EasyPronouns.getConfig().getMaxPronouns()),
                                                 false);
@@ -43,8 +42,8 @@ public class ServerCommands {
                                     }
                                     String pronoun = context.getArgument("pronoun", String.class);
                                     if(pronoun.length() > EasyPronouns.getConfig().getMaxPronounSize()){
-                                        context.getSource().sendFeedback(() ->
-                                                        Text.literal(
+                                        context.getSource().sendSuccess(() ->
+                                                        Component.literal(
                                                                 "Pronoun is too long! Max character length is "
                                                                         + EasyPronouns.getConfig().getMaxPronouns()),
                                                 false);
@@ -52,11 +51,11 @@ public class ServerCommands {
                                     }
                                     
                                     Pronouns.getPlayerData(player).addPronoun(player, pronoun);
-                                    context.getSource().getServer().getPlayerManager().sendToAll(
-                                            new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, player)
+                                    context.getSource().getServer().getPlayerList().broadcastAll(
+                                            new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME, player)
                                     );
-                                    context.getSource().sendFeedback(() ->
-                                                    Text.literal("Added pronoun: " + pronoun),
+                                    context.getSource().sendSuccess(() ->
+                                                    Component.literal("Added pronoun: " + pronoun),
                                             false);
                                     return 1;
                                 })
@@ -65,28 +64,28 @@ public class ServerCommands {
     }
 
 
-    public static void removePronounsCommand(LiteralArgumentBuilder<ServerCommandSource> root) {
-        root.then(CommandManager.literal("remove").then(
-                        CommandManager.argument("pronoun", StringArgumentType.word())
+    public static void removePronounsCommand(LiteralArgumentBuilder<CommandSourceStack> root) {
+        root.then(Commands.literal("remove").then(
+                        Commands.argument("pronoun", StringArgumentType.word())
                                 .executes(context -> {
-                                    ServerPlayerEntity player = context.getSource().getPlayer();
+                                    ServerPlayer player = context.getSource().getPlayer();
                                     if (player == null) {
                                         return 1;
                                     }
                                     String pronoun = context.getArgument("pronoun", String.class);
                                     if(!Pronouns.getPlayerData(player).hasPronoun(pronoun)){
-                                        context.getSource().sendFeedback(() ->
-                                                        Text.literal("Did not have pronoun: " + pronoun),
+                                        context.getSource().sendSuccess(() ->
+                                                        Component.literal("Did not have pronoun: " + pronoun),
                                                 false);
                                         return 1;
                                     }
                                     
                                     Pronouns.getPlayerData(player).removePronoun(player, pronoun);
-                                    context.getSource().getServer().getPlayerManager().sendToAll(
-                                            new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, player)
+                                    context.getSource().getServer().getPlayerList().broadcastAll(
+                                            new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME, player)
                                     );
-                                    context.getSource().sendFeedback(() ->
-                                                    Text.literal("Removed pronoun: " + pronoun),
+                                    context.getSource().sendSuccess(() ->
+                                                    Component.literal("Removed pronoun: " + pronoun),
                                             false);
                                     return 1;
                                 })

@@ -8,18 +8,15 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.dynamic.Codecs;
-import net.minecraft.world.World;
-
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ExtraCodecs;
 import java.util.*;
 
 public class Pronouns {
     public static final AttachmentType<PronounsData> PRONOUNS_ATTACHMENT_TYPE = AttachmentRegistry.create(
-            Identifier.of(EasyPronouns.MODID, "pronouns"),
+            Identifier.fromNamespaceAndPath(EasyPronouns.MODID, "pronouns"),
             builder->builder
                     .initializer(()->PronounsData.DEFAULT)
                     .persistent(PronounsData.CODEC)
@@ -39,10 +36,10 @@ public class Pronouns {
     
     public record PronounsData(List<String> pronounsList) {
         public static Codec<PronounsData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Codecs.NON_EMPTY_STRING.listOf().fieldOf("validRails").forGetter(PronounsData::pronounsList)
+                ExtraCodecs.NON_EMPTY_STRING.listOf().fieldOf("validRails").forGetter(PronounsData::pronounsList)
         ).apply(instance, PronounsData::new));
 
-        public static PacketCodec<ByteBuf, PronounsData> PACKET_CODEC = PacketCodecs.codec(CODEC);
+        public static StreamCodec<ByteBuf, PronounsData> PACKET_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
         public static PronounsData DEFAULT = new PronounsData(new ArrayList<>());
 

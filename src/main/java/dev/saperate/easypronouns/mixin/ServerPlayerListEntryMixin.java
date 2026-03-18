@@ -5,23 +5,11 @@ import dev.saperate.easypronouns.data.Pronouns;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.mixin.event.lifecycle.PlayerListMixin;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.PlayerConfigEntry;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.ServerMetadata;
-import net.minecraft.server.dedicated.gui.PlayerListGui;
-import net.minecraft.server.network.ConnectedClientData;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.network.ServerRecipeBook;
-import net.minecraft.text.HoverEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -32,26 +20,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-@Mixin(ServerPlayerEntity.class)
+@Mixin(ServerPlayer.class)
 public abstract class ServerPlayerListEntryMixin {
     
 
-    @Inject(at = @At("RETURN"), method = "getPlayerListName", cancellable = true)
-    private void init(CallbackInfoReturnable<Text> cir) {
-        ServerPlayerEntity player = (ServerPlayerEntity)(Object)this;
+    @Inject(at = @At("RETURN"), method = "getTabListDisplayName", cancellable = true)
+    private void init(CallbackInfoReturnable<Component> cir) {
+        ServerPlayer player = (ServerPlayer)(Object)this;
         if(player instanceof FakePlayer || !EasyPronouns.getConfig().displaysOnTabList()){
             return;
         }
-        Text originalName = cir.getReturnValue();
+        Component originalName = cir.getReturnValue();
         if(originalName == null){
-            originalName = Text.of(player.getName());
+            originalName = Component.translationArg(player.getName());
         }
         Pronouns.PronounsData pronounsData = Pronouns.getPlayerData(player);
         if(pronounsData.isEmpty(player)){
             cir.setReturnValue(originalName);
             return;
         }
-        MutableText displayName = MutableText.of(originalName.getContent());
+        MutableComponent displayName = MutableComponent.create(originalName.getContents());
         String pronounString = pronounsData.getPronounsAsString();
 
         displayName.append(" (").append(pronounString).append(")");

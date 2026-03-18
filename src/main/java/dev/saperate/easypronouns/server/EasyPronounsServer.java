@@ -5,7 +5,6 @@ import dev.saperate.easypronouns.data.Pronouns;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 
 public class EasyPronounsServer implements DedicatedServerModInitializer {
     @Override
