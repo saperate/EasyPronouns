@@ -51,6 +51,7 @@ public class ServerCommands {
                                     }
                                     
                                     Pronouns.getPlayerData(player).addPronoun(player, pronoun);
+                                    EasyPronouns.updateNameplate(context.getSource().getServer(), player);
                                     context.getSource().getServer().getPlayerList().broadcastAll(
                                             new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME, player)
                                     );
@@ -81,6 +82,7 @@ public class ServerCommands {
                                     }
                                     
                                     Pronouns.getPlayerData(player).removePronoun(player, pronoun);
+                                    EasyPronouns.updateNameplate(context.getSource().getServer(), player);
                                     context.getSource().getServer().getPlayerList().broadcastAll(
                                             new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME, player)
                                     );

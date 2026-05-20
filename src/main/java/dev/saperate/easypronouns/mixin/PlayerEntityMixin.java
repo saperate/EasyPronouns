@@ -20,7 +20,7 @@ public abstract class PlayerEntityMixin {
         if(player instanceof FakePlayer || player.level().isClientSide()){
             return;
         }
-        Component originalName = cir.getReturnValue();
+        Component originalName = player.getName();
         MutableComponent displayName = MutableComponent.create(originalName.getContents());
         Pronouns.PronounsData pronounsData = Pronouns.getPlayerData(player);
         String pronounString = pronounsData.getPronounsAsString();

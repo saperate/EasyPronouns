@@ -31,6 +31,6 @@
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
     "minecraft": "${minecraft_version}",
-    "cloth-config": "21.*"
+    "cloth-config": "26.*"
   }
 }

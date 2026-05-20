@@ -8,7 +8,7 @@ import me.shedaniel.autoconfig.annotation.Config;
 public class EasyPronounsConfig implements ConfigData {
     private int maxPronouns = 3;
     private int maxPronounSize = 10;
-    private boolean displayOnTabList = true;
+    private boolean displayOnTabList = true, displayOnNameplate = true;
 
     public int getMaxPronouns() {
         return maxPronouns;
@@ -20,6 +20,10 @@ public class EasyPronounsConfig implements ConfigData {
     
     public boolean displaysOnTabList(){
         return displayOnTabList;
+    }
+    
+    public boolean displaysOnNameplate(){
+        return displayOnNameplate;
     }
     
 }
