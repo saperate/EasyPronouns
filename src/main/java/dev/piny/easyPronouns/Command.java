@@ -14,11 +14,14 @@ import io.papermc.paper.registry.data.dialog.type.DialogType;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.Style;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("UnstableApiUsage")
 public class Command {
     public Command() {
         EasyPronouns.getInstance().getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> commands.registrar().register(
@@ -82,7 +85,14 @@ public class Command {
                                                                     .initial(EasyPronouns.getInstance().getConfig().getString("display.chat.format", "<hover:show_text:'<pronouns>'><player></hover>"))
                                                                     .maxLength(256)
                                                                     .width(512)
-                                                                    .build()
+                                                                    .build(),
+                                                            DialogInput.bool("flagsToggle", Component.text("Enable Flags? (Automatically loads Resource Pack at media.piny.dev)"))
+                                                                    .initial(EasyPronouns.getInstance().getConfig().getBoolean("flags.enabled", false))
+                                                                    .build(),
+                                                            DialogInput.numberRange("maxFlags", Component.text("Max Flags"), 1, 12)
+                                                                    .initial((float) EasyPronouns.getInstance().getConfig().getInt("flags.max", 2))
+                                                                    .step(1f)
+                                                                    .width(512).build()
                                                     )).build()
                                             )
                                             .type(DialogType.confirmation(
@@ -106,30 +116,26 @@ public class Command {
                                     return 1;
                                 }))
                         .executes(context -> {
+                            ArrayList<ActionButton> buttons = new ArrayList<>();
+                            if (EasyPronouns.getInstance().getConfig().getBoolean("flags.enabled", false)) {
+                                buttons.add(ActionButton.builder(Component.text("Set Flags ").append(Component.text("\uE008", Style.style().font(Key.key("easypronouns:flags")).build())))
+                                        .action(DialogAction.customClick(Key.key("easypronouns:set/open_flags"), null))
+                                        .build());
+                            }
+
+                            buttons.add(ActionButton.builder(Component.text("Submit").color(NamedTextColor.GREEN)).action(DialogAction.customClick(Key.key("easypronouns:set/confirm"), null)).build());
+
                             Dialog dialog = Dialog.create(builder -> builder.empty()
                                     .base(DialogBase.builder(Component.text("EasyPronouns - Set Pronouns"))
                                             .inputs(List.of(
                                                     DialogInput.text("pronouns", Component.text("Enter your pronouns"))
-                                                            .initial(Data.getPronouns(context.getSource().getExecutor().getUniqueId()))
+                                                            .initial(Data.getPronouns(Objects.requireNonNull(context.getSource().getExecutor()).getUniqueId()))
                                                             .maxLength(EasyPronouns.getInstance().getConfig().getInt("maxPronounSize", 16))
                                                             .width(512)
                                                             .build()
                                             )).build()
                                     )
-                                    .type(DialogType.confirmation(
-                                            ActionButton.create(
-                                                    Component.text("Submit").color(NamedTextColor.GREEN),
-                                                    Component.text("Save your pronouns"),
-                                                    100,
-                                                    DialogAction.customClick(Key.key("easypronouns:set/confirm"), null)
-                                            ),
-                                            ActionButton.create(
-                                                    Component.text("Cancel").color(NamedTextColor.RED),
-                                                    Component.text("Discard your changes"),
-                                                    100,
-                                                    null // Just close
-                                            )
-                                    ))
+                                    .type(DialogType.multiAction(buttons, ActionButton.builder(Component.text("Cancel").color(NamedTextColor.RED)).build(), 2))
                             );
 
                             Objects.requireNonNull(context.getSource().getExecutor()).showDialog(dialog);

@@ -1,17 +1,25 @@
 maxPronounSize: 16
+flags:
+  enabled: false
+  max: 2
 
 # Whenever you are able to format a string you can use any MiniMessage you want (https://webui.advntr.dev/).
+# You can use the following placeholders:
+# <pronouns> - The player's pronouns.
+# <player> - The player's name.
+# <flag:1> - The player's pronoun flag in the nth slot (starting at 1). For example, if a player has the flags "bisexual" and "transgender" and you use <flag:2>, it will display the trans flag If the player doesn't have a flag in that slot, it will display nothing.
 display:
   tab:
     enabled: false
-    # The format for the tab list. <pronouns> will be replaced with the player's pronouns, and <player> will be replaced with their name.
-    # Requires ProtocolLib to be installed.
+    # The format for the tab list.
+    # Requires PacketEvents to be installed.
     format: '<grey>[<pronouns>]<white> <player>'
   name:
     enabled: true
-    # The format for the player's name. <pronouns> will be replaced with the player's pronouns, and <player> will be replaced with their name.
+    # The format for the player's name.
     format: '<grey> <pronouns>'
   chat:
     enabled: true
-    # Replaces the name in chat messages (assumes chat messages follow the format <player>: <message>). <pronouns> will be replaced with the player's pronouns, and <player> will be replaced with their name.
+    # Replaces the name in chat messages (assumes chat messages follow the format <player>: <message>). Meaning this may break with chat plugins
+    # If another plugin is overriding the chat format, you can use the PlaceholderAPI expansion alongside %easypronouns_pronouns% to display the player's pronouns in chat.
     format: "<hover:show_text:'<pronouns>'><player></hover>"

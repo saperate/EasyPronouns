@@ -60,7 +60,8 @@ public class PacketListener extends PacketListenerAbstract {
             Component displayComponent = MiniMessage.miniMessage().deserialize(
                     tabFormat,
                     Placeholder.component("pronouns", Component.text(pronouns)),
-                    Placeholder.component("player", Component.text(playerName))
+                    Placeholder.component("player", Component.text(playerName)),
+                    Formatters.flagResolver(profileId)
             );
 
             WrapperPlayServerPlayerInfoUpdate.PlayerInfo newInfo = new WrapperPlayServerPlayerInfoUpdate.PlayerInfo(
@@ -96,7 +97,8 @@ public class PacketListener extends PacketListenerAbstract {
             displayName = MiniMessage.miniMessage().deserialize(
                     tabFormat,
                     Placeholder.component("pronouns", Component.text(pronouns)),
-                    Placeholder.component("player", Component.text(target.getName()))
+                    Placeholder.component("player", Component.text(target.getName())),
+                    Formatters.flagResolver(target.getUniqueId())
             );
         }
 

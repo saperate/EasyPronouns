@@ -13,6 +13,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 
 import java.io.IOException;
+import java.util.List;
 
 public final class EasyPronouns extends JavaPlugin {
     private Objective objective;
@@ -22,6 +23,14 @@ public final class EasyPronouns extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         saveDefaultConfig();
+        getConfig().setComments("display", List.of(
+                "Whenever you are able to format a string you can use any MiniMessage you want (https://webui.advntr.dev/).",
+"You can use the following placeholders",
+"<pronouns> - The player's pronouns.",
+"<player> - The player's name.",
+"<flag:n> - The player's pronoun flag in the nth slot (starting at 1). For example, if a player has the flags \"bisexual\" and \"transgender\" and you use <flag:2>, it will display the trans flag. If the player doesn't have a flag in that slot, it will display nothing."
+        ));
+        saveConfig();
         new Command();
         new Events();
 
@@ -64,7 +73,11 @@ public final class EasyPronouns extends JavaPlugin {
 
         Score score = objective.getScore(target);
         score.setScore(0);
-        score.numberFormat(NumberFormat.fixed(MiniMessage.miniMessage().deserialize(getConfig().getString("display.name.format", "<grey> <pronouns>"), Placeholder.component("pronouns", Component.text(Data.getPronouns(target.getUniqueId()))), Placeholder.component("player", Component.text(target.getName())))));
+        score.numberFormat(NumberFormat.fixed(MiniMessage.miniMessage().deserialize(getConfig().getString("display.name.format", "<grey> <pronouns>"),
+                Placeholder.component("pronouns", Component.text(Data.getPronouns(target.getUniqueId()))),
+                Placeholder.component("player", Component.text(target.getName())),
+                Formatters.flagResolver(target.getUniqueId())
+        )));
 
         PacketListener.updateTabDisplay(target);
     }
