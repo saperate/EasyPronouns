@@ -120,10 +120,10 @@ public class Events implements Listener {
 
         String tabFormat = view.getText("tabFormat");
         EasyPronouns.getInstance().getConfig().set("display.tab.format", tabFormat);
-        if (EasyPronouns.getInstance().protocolManager == null) {
+        if (!EasyPronouns.getInstance().packetEventsEnabled) {
             if (event.getCommonConnection() instanceof PlayerGameConnection conn) {
                 Player player = conn.getPlayer();
-                player.sendRichMessage("<yellow>Since ProtocolLib is not installed, tab list display will not function.</yellow>");
+                player.sendRichMessage("<yellow>Since PacketEvents is not installed, tab list display will not function.</yellow>");
             }
         }
 

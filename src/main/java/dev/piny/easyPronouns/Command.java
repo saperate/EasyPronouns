@@ -62,7 +62,7 @@ public class Command {
                                                                     1,
                                                                     64
                                                             ).step(1f).width(512).initial(Float.parseFloat(String.valueOf(EasyPronouns.getInstance().getConfig().getInt("maxPronounSize", 16)))).build(),
-                                                            DialogInput.bool("tabToggle", Component.text("Tab Display? (Requires ProtocolLib)"))
+                                                            DialogInput.bool("tabToggle", Component.text("Tab Display? (Requires PacketEvents)"))
                                                                     .initial(EasyPronouns.getInstance().getConfig().getBoolean("display.tab.enabled", false))
                                                                     .build(),
                                                             DialogInput.text("tabFormat", Component.text("Tab Display Format (<pronouns> / <player> are available.)"))

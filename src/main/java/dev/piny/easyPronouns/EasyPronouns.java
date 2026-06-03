@@ -1,7 +1,5 @@
 package dev.piny.easyPronouns;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -14,12 +12,11 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 
 public final class EasyPronouns extends JavaPlugin {
     private Objective objective;
-    @Nullable public ProtocolManager protocolManager;
+    public boolean packetEventsEnabled = false;
 
     @Override
     public void onEnable() {
@@ -28,11 +25,11 @@ public final class EasyPronouns extends JavaPlugin {
         new Command();
         new Events();
 
-        if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-            protocolManager = ProtocolLibrary.getProtocolManager();
+        if (Bukkit.getPluginManager().isPluginEnabled("packetevents")) {
+            packetEventsEnabled = true;
             new PacketListener();
         } else {
-            getLogger().warning("ProtocolLib not found! Some features will be disabled or function differently. Please install ProtocolLib for the best experience.");
+            getLogger().warning("PacketEvents not found! Some features will be disabled or function differently. Please install PacketEvents for the best experience.");
         }
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
