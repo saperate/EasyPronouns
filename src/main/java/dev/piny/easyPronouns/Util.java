@@ -28,8 +28,8 @@ public class Util {
                 .packs(
                         ResourcePackInfo.resourcePackInfo(
                                 UUID.fromString("057de9f2-3f96-40be-921b-9eea821118eb"),
-                                URI.create("https://media.piny.dev/modrinth/EasyPronouns/pack/1.3.0.zip"),
-                                "c1dd2a1826f2f9743475cade24d507134844a99d"
+                                URI.create("https://media.piny.dev/modrinth/EasyPronouns/pack/1.4.0.zip"),
+                                "f278e51038551b5dddd599c8496fd99e715af6a0"
                         )
                 )
                 .build();

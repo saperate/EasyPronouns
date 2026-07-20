@@ -14,7 +14,14 @@ public enum Flags {
     PANSEXUAL("\uE00A"),
     AGENDER("\uE00B"),
     POLYSEXUAL("\uE00C"),
-    AROACE("\uE00D");
+    AROACE("\uE00D"),
+    DEMIGIRL("\uE00E"),
+    DEMIBOY("\uE00F"),
+    GENDERQUEER("\uE010"),
+    GENDERFLUID("\uE011"),
+    TRANSMASC("\uE012"),
+    TRANSFEM("\uE013"),
+    OMNISEXUAL("\uE014");
 
     private final String unicode;
     Flags(String unicode) {
@@ -23,5 +30,8 @@ public enum Flags {
 
     public String getUnicode() {
         return unicode;
+    }
+    public String getName() {
+        return this.name().toLowerCase();
     }
 }
