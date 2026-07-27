@@ -69,4 +69,9 @@ public class PronounsExpansion extends PlaceholderExpansion {
 
         return null;
     }
+
+    @Override
+    public boolean persist() {
+        return true;
+    }
 }

@@ -1,5 +1,5 @@
 name: EasyPronouns
-version: '1.4.0'
+version: '1.4.1'
 main: dev.piny.easyPronouns.EasyPronouns
 api-version: '1.21'
 prefix: EasyPronouns
